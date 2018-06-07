@@ -11,7 +11,13 @@
 THIS_DIR=$(dirname $0)
 source ${THIS_DIR}/functions.sh
 
+# /mnt/volumes/backup/$deployment/pg/$date
+TARGET_DIR=${_TARGET_DIR}/pg/
+
+
 TARGET_FILE=$(find_last_pg_dump ${TARGET_DIR})
+
+# TARGET_FILE has .gz suffix
 TARGET_FILE_DECOMPRESSED=${TARGET_FILE::-3}
 
 if [ -f "${TARGET_FILE}" ]; then
