@@ -27,7 +27,7 @@ env
 _TARGET_DIR=${_TARGET_DIR:-/mnt/volumes/backups/${RANCHER_STACK:-geonode-generic}/}
 
 die(){
-    echo ${1}
+    echo ${1} > /dev/stderr
     exit 1;
 }
 
@@ -47,7 +47,7 @@ find_last_file(){
     if [ ! -d "${DIR_NAME}" ]; then
         die "${DIR_NAME} is not directory"
     fi;
-    echo $(find ${DIR_NAME} -type f | grep -i ${FILE_NAME} | sort -r | head -n 1)
+    echo $(find ${DIR_NAME} -type f | grep -i ${FILE_NAME} | grep -v restored | sort -r | head -n 1) 
 }
 
 # find last pg dump file
@@ -76,4 +76,19 @@ find_last_fs_dump(){
 find_fs_date(){
     FILE_NAME="${1}"
     echo $FILE_NAME | sed -ne 's/.*\/\([0-9]\+\).*/\1/gp' || die 'cannot parse date from path' $FILE_NAME
+}
+
+
+set_restore_marker(){
+    BASE_FILE=${1}
+    MARKER_FILE="${BASE_FILE}.restored"
+    touch ${MARKER_FILE}
+}
+
+check_restore_marker(){
+    BASE_FILE=${1}
+    MARKER_FILE="${BASE_FILE}.restored"
+    test -f "${MARKER_FILE}"
+    RET=$?
+    return $RET
 }
