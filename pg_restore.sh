@@ -38,7 +38,15 @@ if [ -f "${TARGET_FILE}" ]; then
     gunzip -k ${TARGET_FILE}
 
     # restore with verbose errors
-    cat ${TARGET_FILE_DECOMPRESSED} | psql -b
+    echo "drop database geonode;
+          \c template1;
+          drop database postgres;
+          drop database geonode_data;
+          UPDATE pg_database SET datistemplate='false' WHERE datname='template_postgis';
+          drop database template_postgis;
+          create database postgres owner postgres" | psql -b -d template1
+    psql -l
+    cat ${TARGET_FILE_DECOMPRESSED} | psql -b -d template1
 
     # cleanup
     rm -f ${TARGET_FILE_DECOMPRESSED}

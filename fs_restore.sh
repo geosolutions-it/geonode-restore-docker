@@ -28,8 +28,8 @@ if [ -f "${TARGET_FILE}" ]; then
     cd /
     tar -zvvxf ${TARGET_FILE}
 
-    rclone -vvv --config /root/rclone.conf copy local:${TARGET_DIR}/${TARGET_DATE}/data/ local:/mnt/volumes/data/
-    rclone -vvv --config /root/rclone.conf copy local:${TARGET_DIR}/${TARGET_DATE}/statics/  local:/mnt/volumes/statics/ 
+    rclone -v --config /root/rclone.conf copy local:${TARGET_DIR}/${TARGET_DATE}/data/ local:/mnt/volumes/data/
+    rclone -v --config /root/rclone.conf copy local:${TARGET_DIR}/${TARGET_DATE}/statics/  local:/mnt/volumes/statics/ 
 
     cd -
     set_restore_marker ${TARGET_FILE}
